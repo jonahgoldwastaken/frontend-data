@@ -7,5 +7,5 @@ charset = utf-8
 indent_style = space
 indent_size = 2
 
-[*.ts]
+[*.js]
 trim_trailing_whitespace = true
