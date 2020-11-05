@@ -1,5 +1,5 @@
 {
-  "apexskier.eslint.config.eslintConfigPath" : "config\/.eslintrc.json",
+  "apexskier.eslint.config.eslintConfigPath" : ".eslintrc.json",
   "apexskier.eslint.config.fixOnSave" : "Enable",
   "apexskier.typescript.config.isEnabledForJavascript" : "Disable",
   "cssvalidator.enabled" : true,

@@ -1,4 +1,17 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+h1 {
+  font-family: sans-serif;
+}
 
+.hot-spot {
+  width: 200px;
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+  font: 700 24px sans-serif;
+  color: black;
+  text-align: center;
+}
+
+.clock-hour {
+  font: 400 16px sans-serif;
+}
