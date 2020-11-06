@@ -1,9 +1,9 @@
-import { select } from 'd3'
-import { andThen, pipe } from 'ramda'
+import { select, scaleLinear } from 'd3'
+// import { andThen, pipe } from 'ramda'
+// import { areaManagerMapper } from './helpers/RDWData.js'
+// import { fetchAndParseMultipleJson } from './modules/fetch.js'
 import { createClockFace } from './d3/clockFace'
-import { createHotSpotText } from './d3/hotSpot'
-import { areaManagerMapper } from './helpers/RDWData.js'
-import { fetchAndParseMultipleJson } from './modules/fetch.js'
+// import { createHotSpotText } from './d3/hotSpot'
 
 // parseRDWData([
 //   'https://opendata.rdw.nl/resource/2uc2-nnv3.json?$limit=900', // area managers
@@ -24,15 +24,23 @@ import { fetchAndParseMultipleJson } from './modules/fetch.js'
 initialiseD3(['hoi'])
 
 function initialiseD3() {
-  const dimension = 1024
-  const svg = select('svg')
+  const dimension = 960
+  const radius = dimension / 2 - 30
+  const defaultDistances = [0, 10]
+  const defaultTimes = [0, 12]
 
-  svg
+  const svg = select('svg')
     .attr('width', dimension)
     .attr('height', dimension)
-    .attr('fill', 'black')
-    .attr('stroke', 'black')
+    .append('g')
+    .attr('transform', `translate(${dimension / 2}, ${dimension / 2})`)
 
-  createClockFace(svg, dimension)
-  createHotSpotText(svg)
+  const distanceScale = scaleLinear()
+    .domain(defaultDistances)
+    .range([0, radius])
+  const timeScale = scaleLinear().domain(defaultTimes).range([0, 360])
+
+  svg.append('circle').attr('r', radius).attr('fill', 'none').attr('stroke', 'black')
+
+  svg.call(createClockFace(timeScale))
 }
