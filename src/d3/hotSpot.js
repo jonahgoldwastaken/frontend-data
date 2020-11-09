@@ -2,7 +2,7 @@ export { createHotSpotText, updateHotSpotText }
 
 function createHotSpotText(dimension, text) {
   return svg => {
-    const size = 100
+    const size = 200
     const position = dimension / 2 - size / 2
     svg
       .append('foreignObject')

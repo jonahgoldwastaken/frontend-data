@@ -1,3 +1,7 @@
+* {
+  box-sizing: border-box;
+}
+
 h1 {
   font-family: sans-serif;
 }
@@ -24,12 +28,18 @@ h1 {
 }
 
 .hot-spot {
+  width: 100%;
+  padding: 12.5px;
   position: relative;
   top: 50%;
   transform: translateY(-50%);
   font: 700 24px sans-serif;
   color: white;
   text-align: center;
+  /* https://css-tricks.com/almanac/properties/o/overflow-wrap/ */
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  hyphens: auto;
 }
 
 .dot {

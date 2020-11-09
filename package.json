@@ -35,6 +35,7 @@
     "nodemon": "^2.0.6",
     "postcss": "^8.1.4",
     "postcss-cli": "^8.2.0",
+    "postcss-comment": "^2.0.0",
     "postcss-nested": "^5.0.1",
     "postcss-preset-env": "^6.7.0",
     "prettier": "2.1.2",
