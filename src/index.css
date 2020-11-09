@@ -2,16 +2,32 @@ h1 {
   font-family: sans-serif;
 }
 
+.clock {
+  fill: none;
+  stroke: black;
+  stroke-width: 12px;
+  
+  &-hour {
+   font: 700 24px sans-serif;
+  }
+  
+  &-hour-line {
+    stroke-width: 4px;
+    stroke: lightgrey;
+    stroke-dasharray: 5;
+  }
+  
+  &-center {
+    fill: black;
+    stroke: none;
+  }
+}
+
 .hot-spot {
-  width: 200px;
   position: relative;
   top: 50%;
   transform: translateY(-50%);
   font: 700 24px sans-serif;
-  color: black;
+  color: white;
   text-align: center;
-}
-
-.clock-hour {
-  font: 400 16px sans-serif;
 }
