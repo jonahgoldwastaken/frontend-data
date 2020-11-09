@@ -34,7 +34,7 @@ function parseGeoData(geoData) {
 }
 
 function parseGeoPoint(pointData) {
-  return pipe(tail, map(Number), zipObj(['long', 'lat']))(pointData)
+  return pipe(tail, map(Number), zipObj(['lat', 'long']))(pointData)
 }
 
 function parseGeoPolygon(polygonData) {
@@ -42,9 +42,9 @@ function parseGeoPolygon(polygonData) {
     tail,
     map(Number),
     reduce(
-      ([long, lat], curr) => [
-        equals(long.length, lat.length) ? [...long, curr] : [...long],
-        gt(long.length, lat.length) ? [...lat, curr] : [...lat],
+      ([lat, long], curr) => [
+        equals(lat.length, long.length) ? [...lat, curr] : [...lat],
+        gt(lat.length, long.length) ? [...long, curr] : [...long],
       ],
       [[], []]
     ),

@@ -126,7 +126,7 @@ function parkingAreaMapper(
   entrance,
   manager
 ) {
-  const area = pipe(
+  return pipe(
     filter(propEq('areamanagerid', manager.areamanagerid)),
     map(val =>
       pipe(
@@ -138,9 +138,13 @@ function parkingAreaMapper(
         assoc('exitPossibleAllDay', associateParkingOpen(open, val)),
         assoc('openingHours', associateParkingEntrance(entrance, val))
       )(val)
-    )
+    ),
+    filter(filterInvalidCoordinates)
   )(areas)
-  return area
+}
+
+function filterInvalidCoordinates(area) {
+  return area.coordinates.long != Infinity
 }
 
 function associateUsageGoal(goals, area) {
