@@ -1,7 +1,6 @@
 import { select, lineRadial } from 'd3'
 import { pipe, filter } from 'ramda'
 import hotSpots from './hot-spots.json'
-import rdwData from './rdw-data.json'
 import { createClockFace } from './d3/clockFace.js'
 import { createScales } from './d3/scales.js'
 import { createHotSpotText, updateHotSpotText } from './d3/hotSpot.js'
@@ -17,6 +16,8 @@ let times = defaultTimes
 
 initialiseD3()
 
+import('./rdw-data.json').then(populateGraph)
+
 function initialiseD3() {
   const svg = createSVG(dimension)
 
@@ -24,11 +25,9 @@ function initialiseD3() {
   svg.append('circle').attr('r', 100).attr('class', 'clock-center')
   svg.call(createClockFace(times, clockRadius))
   svg.call(createHotSpotText(dimension, 'Laden...'))
-
-  populateGraph(rdwData)
 }
 
-function populateGraph(dataset) {
+function populateGraph({ default: dataset }) {
   const filteredData = pipe(
     calculateDistanceToHotSpot(hotSpots[0]),
     filter(filterOnDistanceToHotSpot)
