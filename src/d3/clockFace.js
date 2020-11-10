@@ -1,16 +1,18 @@
+import { range } from 'd3'
 export { createClockFace }
 
-function createClockFace(timeScale, times, radius) {
+function createClockFace(times, radius) {
   const data = createTimesArray(times)
   return svg => {
     const textMargin = 35
     const lineMargin = textMargin * 1.75
     const faceG = svg
       .append('g')
+      .attr('transform', 'rotate(-90)')
       .selectAll('line')
-      .data(data)
+      .data(range(0, 360, 30))
       .join('g')
-      .attr('transform', d => `rotate(${timeScale(d)})`)
+      .attr('transform', d => `rotate(${d})`)
 
     faceG
       .append('line')
@@ -23,12 +25,9 @@ function createClockFace(timeScale, times, radius) {
       .attr('x', radius - textMargin)
       .attr('text-anchor', 'middle')
       .attr('alignment-baseline', 'middle')
-      .attr(
-        'transform',
-        d => `rotate(${-timeScale(d)} ${radius - textMargin} 0)`
-      )
+      .attr('transform', d => `rotate(${-d + 90} ${radius - textMargin} 0)`)
       .attr('class', 'clock-hour')
-      .text(d => d)
+      .text(d => data[range(0, 360, 30).indexOf(d)])
   }
 }
 

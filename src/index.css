@@ -31,3 +31,13 @@ h1 {
   color: white;
   text-align: center;
 }
+
+.dot {
+  &-has-time {
+    fill: black;
+  }
+  
+  &-has-no-time {
+    fill: darkgrey;
+  }
+}

@@ -1,72 +1,57 @@
-import { select } from 'd3'
-import { flatten, map, andThen, pipe, filter } from 'ramda'
-import { areaManagerMapper } from './helpers/RDWData.js'
-import { fetchAndParseMultipleJson } from './modules/fetch.js'
+import { select, lineRadial } from 'd3'
+import { pipe, filter } from 'ramda'
 import hotSpots from './hot-spots.json'
+import rdwData from './rdw-data.json'
 import { createClockFace } from './d3/clockFace.js'
 import { createScales } from './d3/scales.js'
-import { createHotSpotText } from './d3/hotSpot.js'
+import { createHotSpotText, updateHotSpotText } from './d3/hotSpot.js'
 import { addDistanceToData } from './d3/distance.js'
 
 const dimension = 960
 const clockRadius = dimension / 2 - 30
 const radius = clockRadius - 61.25
 const defaultDistances = [0, 5]
-const defaultTimes = [0, 12]
+const defaultTimes = [12, 24]
 let distances = defaultDistances
 let times = defaultTimes
-
-parseRDWData([
-  'https://opendata.rdw.nl/resource/2uc2-nnv3.json?$limit=900', // area managers
-  'https://opendata.rdw.nl/resource/534e-5vdg.json?$limit=4100', // fare parts
-  'https://opendata.rdw.nl/resource/nfzq-8g7y.json?$limit=1600', // fare calculations
-  'https://opendata.rdw.nl/resource/adw6-9hsg.json?$limit=5000', // parking areas
-  'https://opendata.rdw.nl/resource/qidm-7mkf.json?$limit=1600', // usage goal
-  'https://opendata.rdw.nl/resource/b3us-f26s.json?$limit=2100', // area specifications
-  'https://opendata.rdw.nl/resource/nsk3-v9n7.json?$limit=5300', // geometry parking area
-  'https://opendata.rdw.nl/resource/figd-gux7.json?$limit=900', // parking open
-  'https://opendata.rdw.nl/resource/edv8-qiyg.json?$limit=700', // parking entrance
-]).then(populateGraph)
-
-async function parseRDWData(uri) {
-  return await pipe(fetchAndParseMultipleJson, andThen(areaManagerMapper))(uri)
-}
 
 initialiseD3()
 
 function initialiseD3() {
-  const [timeScale] = createScales([times, distances, radius])
   const svg = createSVG(dimension)
 
   svg.append('circle').attr('r', clockRadius).attr('class', 'clock')
   svg.append('circle').attr('r', 100).attr('class', 'clock-center')
-  svg.call(createClockFace(timeScale, times, clockRadius))
+  svg.call(createClockFace(times, clockRadius))
   svg.call(createHotSpotText(dimension, 'Laden...'))
+
+  populateGraph(rdwData)
 }
 
 function populateGraph(dataset) {
-  const [timeScale, distanceScale] = createScales([times, distances, radius])
   const filteredData = pipe(
-    calculateAllParkingManagers(hotSpots[0]),
+    calculateDistanceToHotSpot(hotSpots[0]),
     filter(filterOnDistanceToHotSpot)
   )(dataset)
-  filteredData.forEach(item => console.log(item.description, item.openingHours))
+  const [timeScale, distanceScale] = createScales(times, distances, radius)
+  const line = lineRadial()
+    .radius(d => distanceScale(d.distanceToHotSpot))
+    .angle(d => timeScale(d.openingHours[1]))
   const svg = selectSVG()
-  const dataG = svg.append('g').attr('transform', 'rotate(-90)')
+  const dataG = svg.append('g')
+
   dataG
     .selectAll('circle')
     .data(filteredData)
     .join('circle')
     .attr('class', 'dot')
-    .attr('transform', d => {
-      // get angle and radius
-      const an = timeScale(Math.random() * 12),
-        ra = distanceScale(d.distanceToHotSpot),
-        x = ra * Math.cos(an),
-        y = ra * Math.sin(an)
-      return `translate(${[x, y]})`
-    })
+    .attr('transform', d => `translate(${line([d]).slice(1).slice(0, -1)})`)
     .attr('r', 4)
+    .attr('class', d =>
+      d.openingHours[1] !== null ? 'dot-has-time' : 'dot-has-no-time'
+    )
+
+  updateHotSpotText(svg, hotSpots[0].name)
 }
 
 function createSVG(dimension) {
@@ -81,8 +66,8 @@ function selectSVG() {
   return select('svg').select('g')
 }
 
-function calculateAllParkingManagers(hotspot) {
-  return dataset => pipe(map(addDistanceToData(hotspot)), flatten)(dataset)
+function calculateDistanceToHotSpot(hotspot) {
+  return dataset => addDistanceToData(hotspot)(dataset)
 }
 
 function filterOnDistanceToHotSpot(area) {

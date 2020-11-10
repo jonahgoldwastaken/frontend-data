@@ -3,8 +3,8 @@ import haversine from 'haversine'
 export { addDistanceToData }
 
 function addDistanceToData(hotSpot) {
-  return manager =>
-    manager.parkingAreas.map(area => ({
+  return areas =>
+    areas.map(area => ({
       ...area,
       distanceToHotSpot: haversine(
         [area.coordinates.long, area.coordinates.lat],
