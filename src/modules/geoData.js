@@ -19,6 +19,12 @@ import { isGeoDataPoint } from '../utilities/geoData.js'
 
 export { parseGeoData }
 
+/**
+ * Parses GeoData string to coordinates object
+ *
+ * @param {string} geoData  GeoData to parse
+ * @returns {object} parsed object as {long: number, lat: number}
+ */
 function parseGeoData(geoData) {
   return pipe(
     splitStringOnString(' '),

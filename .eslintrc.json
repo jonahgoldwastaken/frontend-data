@@ -34,6 +34,9 @@
       "plugin:functional/external-recommended",
       "plugin:functional/recommended",
       "prettier"
-    ]
+    ],
+    "rules": {
+      "functional/functional-parameters": 0
+    }
   }]
 }

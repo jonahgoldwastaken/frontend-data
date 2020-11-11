@@ -1,5 +1,7 @@
 import { range } from 'd3'
-export { createClockFace }
+import { createTimesArray } from '../utilities/chart.js'
+
+export { createClockFace, createClock }
 
 function createClockFace(times, radius) {
   const data = createTimesArray(times)
@@ -31,12 +33,9 @@ function createClockFace(times, radius) {
   }
 }
 
-function createTimesArray(times) {
-  return times.reduce(
-    (acc, curr) =>
-      acc.length === 1
-        ? acc.concat([...new Array(11)].map((_, i) => i + 1 + acc[0]))
-        : [curr],
-    []
-  )
+function createClock(clockRadius) {
+  return svg => {
+    svg.append('circle').attr('r', clockRadius).attr('class', 'clock')
+    svg.append('circle').attr('r', 100).attr('class', 'clock-center')
+  }
 }

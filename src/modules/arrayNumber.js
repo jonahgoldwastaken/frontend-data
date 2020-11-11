@@ -4,7 +4,7 @@ export { validArrayIndex }
 
 /**
  * Checks if passed index is a valid array index
- * @param i Index to check
+ * @param {number} i Index to check
  */
 function validArrayIndex(i) {
   return greaterThan(-1)(i)

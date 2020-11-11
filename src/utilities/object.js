@@ -4,7 +4,9 @@ export { pickKeyFromObject, renameObjectKeys }
 
 /**
  * Returns only the value from passed key in provided object
- * @param key Key to return from object
+ *
+ * @param {string} key Key to return from object
+ * @returns {(object) => *} Function that takes an object and returns value at provided key
  */
 function pickKeyFromObject(key) {
   return object => ({ ...object }[key])
@@ -12,7 +14,9 @@ function pickKeyFromObject(key) {
 
 /**
  * Changes the keys inside provided object to values of newKeysObj
- * @param keyMap Lookup table containing old keys as keys and new keys as values
+ *
+ * @param {object} keyMap Lookup table containing old keys as keys and new keys as values
+ * @return {(object) => object} Function that transforms provided object using provided keyMap
  */
 function renameObjectKeys(keysMap) {
   return obj =>
