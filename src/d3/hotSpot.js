@@ -1,4 +1,4 @@
-export { createHotSpotText }
+export { createHotSpotText, updateHotSpotText }
 
 function createHotSpotText(dimension, text) {
   return svg => {
@@ -13,9 +13,9 @@ function createHotSpotText(dimension, text) {
       .append('xhtml:p')
       .text(text)
       .classed('hot-spot', true)
-
-    return function updateHotspot(text) {
-      svg.select('foreignObject').select('p').text(text)
-    }
   }
+}
+
+function updateHotSpotText(svg, text) {
+  svg.select('foreignObject').select('p').text(text)
 }

@@ -14,8 +14,9 @@ export {
 
 /**
  * Sorts arrays alphabetically, should only be used inside a sort Higher-Order function
- * @param a first argument passed by array.sort to callback
- * @param b second argument passed by array.sort to callback
+ * @param {string} a first argument passed by array.sort to callback
+ * @param {string} b second argument passed by array.sort to callback
+ * @returns {boolean}
  */
 function sortArrayOfStringsAlphabetically(a, b) {
   return upper.indexOf(a[0]) > upper.indexOf(b[0])
@@ -29,7 +30,8 @@ function sortArrayOfStringsAlphabetically(a, b) {
 
 /**
  * Check if a certain value exists in an array containing values of the same type
- * @param arr Array of any type
+ * @param {Array} arr Array of any type
+ * @returns {boolean}
  */
 function arrayContainsValue(arr) {
   return val => includes(val, arr)
@@ -37,7 +39,8 @@ function arrayContainsValue(arr) {
 
 /**
  * Checks is value passed is an array
- * @param val Value that's being checked
+ * @param {*} val Value that's being checked
+ * @returns {boolean}
  */
 function valIsArray(val) {
   return Array.isArray(val)
@@ -45,7 +48,8 @@ function valIsArray(val) {
 
 /**
  * Filters empty arrays from an array containg arrays
- * @param arr Array with arrays of which some are empty
+ * @param {any[]} arr Array with arrays of which some are empty
+ * @returns {boolean}
  */
 function arrayIsNotEmpty(arr) {
   return !!arr.length
@@ -53,7 +57,8 @@ function arrayIsNotEmpty(arr) {
 
 /**
  * Replace empty arrays inside an array to value passed
- * @param val The value that will be replacing the empty arrays inside passed array
+ * @param {*} val The value that will be replacing the empty arrays inside passed array
+ * @returns {(Array) => (Array|*)} Function that returns array if array is not empty or parameter val if array is empty
  */
 function mapEmptyArraysInArrayToOtherValue(val) {
   return arr => (arrayIsNotEmpty(arr) ? arr : val)
@@ -64,6 +69,7 @@ function mapEmptyArraysInArrayToOtherValue(val) {
  * Example output: [['unique value', 5]] for ['unique value', 'unique value', 'unique value', 'unique value', 'unique value']
  * @param acc The accumulator, an OccurenceTuple
  * @param curr The current value being looped over
+ * @returns {[*, number]} Array with occurrences for every unique value.
  */
 function reduceArrayValuesToOccurenceAmount(acc, curr) {
   const i = acc.findIndex(tup => tup[0] === curr)

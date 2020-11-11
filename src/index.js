@@ -1,39 +1,71 @@
-import { select, scaleLinear } from 'd3'
-// import { andThen, pipe } from 'ramda'
-// import { areaManagerMapper } from './helpers/RDWData.js'
-// import { fetchAndParseMultipleJson } from './modules/fetch.js'
-import { createClockFace } from './d3/clockFace.js'
-import { createScales } from './d3/scales.js'
-import { createHotSpotText } from './d3/hotSpot.js'
+import hotSpots from './hot-spots.json'
+import { createClockFace, createClock } from './d3/clock.js'
+import {
+  createInitialConfig,
+  createScales,
+  readyDataForChart,
+  createRadialLine,
+} from './modules/chart.js'
+import { createHotSpotText, updateHotSpotText } from './d3/hotSpot.js'
+import { createSVG, selectSVG } from './utilities/chart'
 
-initialiseD3()
+const {
+  dimension,
+  clockRadius,
+  radius,
+  defaultTimes,
+  defaultDistances,
+  defaultTimeType,
+} = createInitialConfig(960)
 
-function initialiseD3() {
-  const dimension = 960
-  const clockRadius = dimension / 2 - 30
-  const radius = clockRadius - 61.25
-  const defaultDistances = [0, 10]
-  const defaultTimes = [2, 14]
-  const [timeScale, distanceScale] = createScales([
-    defaultTimes,
-    defaultDistances,
-    radius,
-  ])
-  const svg = createSVG(dimension)
-  svg.append('circle').attr('r', clockRadius).attr('class', 'clock')
-  svg.append('circle').attr('r', 100).attr('class', 'clock-center')
-  svg.call(createClockFace(timeScale, defaultTimes, clockRadius))
-  svg.call(createHotSpotText(dimension, 'Melkweg'))
+initialiseSVG({ times: defaultTimes })
+
+import('./rdw-data.json')
+  .then(
+    readyDataForChart(
+      hotSpots[0],
+      defaultDistances,
+      defaultTimes,
+      defaultTimeType
+    )
+  )
+  .then(render)
+
+function initialiseSVG({ times }) {
+  createSVG(dimension)
+    .call(createClock(clockRadius))
+    .call(createClockFace(times, clockRadius))
+    .call(createHotSpotText(dimension, 'Laden...'))
 }
 
-function createSVG(dimension) {
-  return select('svg')
-    .attr('width', dimension)
-    .attr('height', dimension)
-    .append('g')
-    .attr('transform', `translate(${dimension / 2}, ${dimension / 2})`)
-}
+function render(
+  data,
+  { times, distances, timeType } = {
+    times: defaultTimes,
+    distances: defaultDistances,
+    timeType: defaultTimeType,
+  }
+) {
+  const svg = selectSVG()
+  const dataG = svg.append('g')
+  const [timeScale, distanceScale] = createScales(times, distances, radius)
+  const line = createRadialLine({ distanceScale, timeScale }, timeType)
 
-function selectSVG() {
-  return select('svg').select('g')
+  dataG
+    .selectAll('circle')
+    .data(data)
+    .join('circle')
+    .attr('class', 'dot')
+    .attr('transform', d => `translate(${line([d]).slice(1).slice(0, -1)})`)
+    .attr('r', 4)
+    .attr('class', d =>
+      timeType === 'opening'
+        ? d.openingHours[0] !== null
+          ? 'dot-has-time'
+          : 'dot-has-no-time'
+        : d.openingHours[1] !== null
+        ? 'dot-has-time'
+        : 'dot-has-no-time'
+    )
+  updateHotSpotText(svg, hotSpots[0].name)
 }
