@@ -5,12 +5,12 @@ module.exports = {
   },
   exclude: ['.nova', 'config'],
   plugins: [
-    // [
-    //   '@snowpack/plugin-run-script',
-    //   {
-    //     cmd: 'node parseRDWData.js',
-    //   },
-    // ],
+    [
+      '@snowpack/plugin-run-script',
+      {
+        cmd: 'node parseRDWData.js',
+      },
+    ],
     ['@snowpack/plugin-postcss', {}],
     ['@snowpack/plugin-optimize', {}],
   ],

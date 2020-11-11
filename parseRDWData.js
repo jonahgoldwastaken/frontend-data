@@ -1,4 +1,6 @@
-require('@babel/register')
+require('@babel/register')({
+  presets: ['@babel/preset-env']
+})
 const fs = require('fs')
 const { andThen, pipe } = require('ramda')
 const { parkingAreaMapper } = require('./src/helpers/RDWData.js')

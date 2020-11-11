@@ -21,6 +21,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.12.3",
+    "@babel/preset-env": "^7.12.1",
     "@babel/register": "^7.12.1",
     "@snowpack/plugin-optimize": "^0.2.7",
     "@snowpack/plugin-postcss": "^1.0.7",
