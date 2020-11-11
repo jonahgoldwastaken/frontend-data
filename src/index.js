@@ -8,6 +8,7 @@ import {
 } from './modules/chart.js'
 import { createHotSpotText, updateHotSpotText } from './d3/hotSpot.js'
 import { createSVG, selectSVG } from './utilities/chart'
+import { select } from 'd3'
 
 const {
   dimension,
@@ -19,6 +20,7 @@ const {
 } = createInitialConfig(960)
 
 initialiseSVG({ times: defaultTimes })
+createForm(hotSpots)
 
 import('./rdw-data.json')
   .then(
@@ -67,5 +69,23 @@ function render(
         ? 'dot-has-time'
         : 'dot-has-no-time'
     )
+
   updateHotSpotText(svg, hotSpots[0].name)
+}
+
+function createForm(hotSpotData) {
+  select('form')
+    .append('select')
+    .on('change', onHotSpotSelect)
+    .selectAll('option')
+    .data(hotSpotData)
+    .join('option')
+    .attr('value', d => d.name)
+    .text(d => d.name)
+}
+
+function onHotSpotSelect() {
+  const newHotSpot = hotSpots.find(val => val.name === this.value)
+  const svg = selectSVG()
+  updateHotSpotText(svg, newHotSpot.name)
 }
