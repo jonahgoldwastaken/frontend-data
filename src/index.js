@@ -12,6 +12,7 @@ import {
   createOrSelectDataGroup,
   createSVG,
   selectSVG,
+  updateDistancesLabel,
   updateTimesLabel,
 } from './utilities/chart'
 
@@ -78,6 +79,7 @@ async function chartApp() {
 
     updateHotSpotText(svg, hotSpot.name)
     updateTimesLabel(times)
+    updateDistancesLabel(distances)
   }
 
   function initialiseApp() {
@@ -86,6 +88,38 @@ async function chartApp() {
       .call(createHotSpotText(dimension, 'Laden...'))
 
     createForm()
+  }
+
+  function updateHotSpot() {
+    const newHotSpot = hotSpots.find(val => val.name === this.value)
+    hotSpot = newHotSpot
+    onUpdate()
+  }
+
+  function updateTimes(addTimes) {
+    return () => {
+      if (addTimes && times[1] < 24) times = [times[0] + 1, times[1] + 1]
+      else if (!addTimes && times[0] > 0) times = [times[0] - 1, times[1] - 1]
+      onUpdate()
+    }
+  }
+
+  function updateDistances(addDistances) {
+    return () => {
+      if (addDistances) distances = [distances[0] + 1, distances[1] + 1]
+      else distances = [distances[0] - 1, distances[1] - 1]
+      onUpdate()
+    }
+  }
+
+  function updateTimeType() {
+    timeType = this.value
+    onUpdate()
+  }
+
+  function updateShowAllData() {
+    showAllData = this.checked
+    onUpdate()
   }
 
   function createForm() {
@@ -126,6 +160,19 @@ async function chartApp() {
       .attr('type', 'button')
       .on('click', updateTimes(true))
 
+    form.append('label').classed('distances-label', true)
+
+    form
+      .append('button')
+      .text('-')
+      .attr('type', 'button')
+      .on('click', updateDistances(false))
+    form
+      .append('button')
+      .text('+')
+      .attr('type', 'button')
+      .on('click', updateDistances(true))
+
     form
       .append('label')
       .text('Toon parkeerplaatsen zonder openingstijden: ')
@@ -133,30 +180,6 @@ async function chartApp() {
       .attr('type', 'checkbox')
       .attr('checked', () => showAllData)
       .on('change', updateShowAllData)
-  }
-
-  function updateHotSpot() {
-    const newHotSpot = hotSpots.find(val => val.name === this.value)
-    hotSpot = newHotSpot
-    onUpdate()
-  }
-
-  function updateTimes(addTimes) {
-    return () => {
-      if (addTimes && times[1] < 24) times = [times[0] + 1, times[1] + 1]
-      else if (!addTimes && times[0] > 0) times = [times[0] - 1, times[1] - 1]
-      onUpdate()
-    }
-  }
-
-  function updateTimeType() {
-    timeType = this.value
-    onUpdate()
-  }
-
-  function updateShowAllData() {
-    showAllData = this.checked
-    onUpdate()
   }
 
   function setToaster(e, data) {

@@ -15,6 +15,7 @@ export {
   createOrSelectDataGroup,
   createOrSelectClockFaceGroup,
   updateTimesLabel,
+  updateDistancesLabel,
 }
 
 /**
@@ -40,7 +41,9 @@ function createTimesArray(times) {
  * @returns {(object) => boolean} Function that checks if distance to hotspot is lower than max distance.
  */
 function filterOnDistanceToHotSpot(distances) {
-  return area => area.distanceToHotSpot < distances[1]
+  return area =>
+    area.distanceToHotSpot > distances[0] &&
+    area.distanceToHotSpot < distances[1]
 }
 
 /**
@@ -152,8 +155,22 @@ function createOrSelectClockFaceGroup() {
         .attr('transform', 'rotate(-90)')
 }
 
+/**
+ * Prints times on times label
+ * @param {[number, number]} times Array with min and max time
+ */
 function updateTimesLabel(times) {
   return select('.times-label').text(
     `: van ${times[0] < 10 ? `0${times[0]}` : times[0]} tot ${times[1]} uur`
+  )
+}
+
+/**
+ * Prints distances on distances label
+ * @param {[number, number]} distances Array with min and max distance
+ */
+function updateDistancesLabel(distances) {
+  return select('.distances-label').text(
+    `Afstand tot hotspot: tussen ${distances[0]}km en ${distances[1]}km`
   )
 }
