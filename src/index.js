@@ -7,6 +7,8 @@ import {
   createRadialLine,
   createScales,
   readyDataForChart,
+  resetToaster,
+  setToaster,
 } from './modules/chart.js'
 import {
   createOrSelectDataGroup,
@@ -181,40 +183,5 @@ async function chartApp() {
       .attr('type', 'checkbox')
       .attr('checked', () => showAllData)
       .on('change', updateShowAllData)
-  }
-
-  function setToaster(e, data) {
-    select('.toaster')
-      .html(
-        `<ul>
-          <li>Afstand: ${data.distanceToHotSpot}KM</li>
-          <li>Capaciteit: ${data.capacity}</li>
-          <li>${
-            timeType === 'closing'
-              ? `Sluitingstijd: ${
-                  `${data.openingHours[1]}:00 uur` || 'Niet opgegeven'
-                }`
-              : `Openingstijd: ${
-                  `${data.openingHours[0]}:00 uur` || 'Niet opgegeven'
-                }`
-          }</li>
-          <li>${
-            timeType === 'closing'
-              ? `Openingstijd: ${
-                  `${data.openingHours[0]}:00 uur` || 'Niet opgegeven'
-                }`
-              : `Sluitingstijd: ${
-                  `${data.openingHours[1]}:00 uur` || 'Niet opgegeven'
-                }`
-          }</li>
-        </ul>`
-      )
-      .style('top', `${e.pageY - window.scrollY}px`)
-      .style('left', `${e.pageX - window.scrollX}px`)
-      .classed('toaster-shown', true)
-  }
-
-  function resetToaster() {
-    select('.toaster').classed('toaster-shown', false)
   }
 }
