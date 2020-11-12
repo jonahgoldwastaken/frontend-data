@@ -1,4 +1,4 @@
-import { F, ifElse, always } from 'ramda'
+import { always, F, ifElse } from 'ramda'
 
 export { runFuncIfTrue }
 

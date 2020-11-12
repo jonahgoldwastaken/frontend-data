@@ -6,11 +6,15 @@ export {
   createTimesArray,
   filterOnOpeningHours,
   filterOnDistanceToHotSpot,
+  filterInvalidData,
   addDistanceToData,
   createTimeScale,
   createDistanceScale,
   createSVG,
   selectSVG,
+  createOrSelectDataGroup,
+  createOrSelectClockFaceGroup,
+  updateTimesLabel,
 }
 
 /**
@@ -47,11 +51,20 @@ function filterOnDistanceToHotSpot(distances) {
  */
 function filterOnOpeningHours({ times, timeType }) {
   return area =>
-    area.openingHours[0]
+    area.openingHours[0] !== null
       ? timeType === 'opening'
         ? area.openingHours[0] > times[0] && area.openingHours[0] < times[1]
         : area.openingHours[1] > times[0] && area.openingHours[1] < times[1]
       : true
+}
+
+/**
+ * Filters areas on if they have valid opening hours data
+ * @param {object} area Area to filter
+ * @returns {boolean}
+ */
+function filterInvalidData(area) {
+  return area.openingHours[0] !== null
 }
 
 /**
@@ -67,7 +80,7 @@ function addDistanceToData(hotSpot) {
         [area.coordinates.long, area.coordinates.lat],
         [+hotSpot.long, +hotSpot.lat],
         { format: '[lon,lat]' }
-      ),
+      ).toFixed(2),
     }))
 }
 
@@ -112,4 +125,35 @@ function createSVG(dimension) {
  */
 function selectSVG() {
   return select('svg').select('g')
+}
+
+/**
+ * Create or selects data group
+ * @returns {*} SVG g tag
+ */
+function createOrSelectDataGroup() {
+  const existingGroup = select('.data-group')
+  return !existingGroup.empty()
+    ? existingGroup
+    : selectSVG().append('g').attr('class', 'data-group')
+}
+
+/**
+ * Create or selects clock face group
+ * @returns {*} SVG g tag
+ */
+function createOrSelectClockFaceGroup() {
+  const existingGroup = select('.face-group')
+  return !existingGroup.empty()
+    ? existingGroup
+    : selectSVG()
+        .append('g')
+        .attr('class', 'face-group')
+        .attr('transform', 'rotate(-90)')
+}
+
+function updateTimesLabel(times) {
+  return select('.times-label').text(
+    `: van ${times[0] < 10 ? `0${times[0]}` : times[0]} tot ${times[1]} uur`
+  )
 }

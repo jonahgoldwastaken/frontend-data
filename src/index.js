@@ -1,91 +1,196 @@
+import { select } from 'd3'
+import { createClock, createClockFace } from './d3/clock.js'
+import { createHotSpotText, updateHotSpotText } from './d3/hotSpot.js'
 import hotSpots from './hot-spots.json'
-import { createClockFace, createClock } from './d3/clock.js'
 import {
   createInitialConfig,
+  createRadialLine,
   createScales,
   readyDataForChart,
-  createRadialLine,
 } from './modules/chart.js'
-import { createHotSpotText, updateHotSpotText } from './d3/hotSpot.js'
-import { createSVG, selectSVG } from './utilities/chart'
-import { select } from 'd3'
+import {
+  createOrSelectDataGroup,
+  createSVG,
+  selectSVG,
+  updateTimesLabel,
+} from './utilities/chart'
 
-const {
-  dimension,
-  clockRadius,
-  radius,
-  defaultTimes,
-  defaultDistances,
-  defaultTimeType,
-} = createInitialConfig(960)
+chartApp()
 
-initialiseSVG({ times: defaultTimes })
-createForm(hotSpots)
+async function chartApp() {
+  let {
+    dimension,
+    clockRadius,
+    radius,
+    times,
+    distances,
+    timeType,
+    hotSpot,
+    showAllData,
+  } = createInitialConfig(960, hotSpots[0])
 
-import('./rdw-data.json')
-  .then(
-    readyDataForChart(
-      hotSpots[0],
-      defaultDistances,
-      defaultTimes,
-      defaultTimeType
-    )
-  )
-  .then(render)
+  initialiseApp()
 
-function initialiseSVG({ times }) {
-  createSVG(dimension)
-    .call(createClock(clockRadius))
-    .call(createClockFace(times, clockRadius))
-    .call(createHotSpotText(dimension, 'Laden...'))
-}
+  const { default: dataset } = await import('./rdw-data.json')
 
-function render(
-  data,
-  { times, distances, timeType } = {
-    times: defaultTimes,
-    distances: defaultDistances,
-    timeType: defaultTimeType,
+  onUpdate()
+
+  function onUpdate() {
+    const data = readyDataForChart(
+      hotSpot,
+      distances,
+      times,
+      timeType,
+      showAllData
+    )(dataset)
+    render(data, { times, distances, timeType })
   }
-) {
-  const svg = selectSVG()
-  const dataG = svg.append('g')
-  const [timeScale, distanceScale] = createScales(times, distances, radius)
-  const line = createRadialLine({ distanceScale, timeScale }, timeType)
 
-  dataG
-    .selectAll('circle')
-    .data(data)
-    .join('circle')
-    .attr('class', 'dot')
-    .attr('transform', d => `translate(${line([d]).slice(1).slice(0, -1)})`)
-    .attr('r', 4)
-    .attr('class', d =>
-      timeType === 'opening'
-        ? d.openingHours[0] !== null
-          ? 'dot-has-time'
-          : 'dot-has-no-time'
-        : d.openingHours[1] !== null
-        ? 'dot-has-time'
-        : 'dot-has-no-time'
-    )
+  function render(data, { times, distances, timeType }) {
+    createClockFace(times, clockRadius)
 
-  updateHotSpotText(svg, hotSpots[0].name)
-}
+    const svg = selectSVG()
+    const dataG = createOrSelectDataGroup()
+    const [timeScale, distanceScale] = createScales(times, distances, radius)
+    const line = createRadialLine({ distanceScale, timeScale }, timeType)
 
-function createForm(hotSpotData) {
-  select('form')
-    .append('select')
-    .on('change', onHotSpotSelect)
-    .selectAll('option')
-    .data(hotSpotData)
-    .join('option')
-    .attr('value', d => d.name)
-    .text(d => d.name)
-}
+    dataG
+      .selectAll('circle')
+      .data(data)
+      .join('circle')
+      .classed('dot', true)
+      .attr('transform', d => `translate(${line([d]).slice(1).slice(0, -1)})`)
+      .attr('r', 4)
+      .classed(
+        'dot-has-time',
+        d =>
+          (timeType === 'opening' && d.openingHours[0]) ||
+          (timeType === 'closing' && d.openingHours[1])
+      )
+      .classed(
+        'dot-has-no-time',
+        d =>
+          (timeType === 'opening' && !d.openingHours[0]) ||
+          (timeType === 'closing' && !d.openingHours[1])
+      )
+      .on('mouseover', setToaster)
+      .on('mouseout', resetToaster)
 
-function onHotSpotSelect() {
-  const newHotSpot = hotSpots.find(val => val.name === this.value)
-  const svg = selectSVG()
-  updateHotSpotText(svg, newHotSpot.name)
+    updateHotSpotText(svg, hotSpot.name)
+    updateTimesLabel(times)
+  }
+
+  function initialiseApp() {
+    createSVG(dimension)
+      .call(createClock(clockRadius))
+      .call(createHotSpotText(dimension, 'Laden...'))
+
+    createForm()
+  }
+
+  function createForm() {
+    const form = select('form')
+
+    form
+      .append('select')
+      .on('change', updateHotSpot)
+      .selectAll('option')
+      .data(hotSpots)
+      .join('option')
+      .attr('value', d => d.name)
+      .text(d => d.name)
+
+    form
+      .append('select')
+      .attr('value', timeType)
+      .on('change', updateTimeType)
+      .selectAll('option')
+      .data([
+        { value: 'opening', name: 'Openingstijden' },
+        { value: 'closing', name: 'Sluitingstijden' },
+      ])
+      .join('option')
+      .text(d => d.name)
+      .attr('value', d => d.value)
+
+    form.append('label').classed('times-label', true)
+
+    form
+      .append('button')
+      .text('-')
+      .attr('type', 'button')
+      .on('click', updateTimes(false))
+    form
+      .append('button')
+      .text('+')
+      .attr('type', 'button')
+      .on('click', updateTimes(true))
+
+    form
+      .append('label')
+      .text('Toon parkeerplaatsen zonder openingstijden: ')
+      .append('input')
+      .attr('type', 'checkbox')
+      .attr('checked', () => showAllData)
+      .on('change', updateShowAllData)
+  }
+
+  function updateHotSpot() {
+    const newHotSpot = hotSpots.find(val => val.name === this.value)
+    hotSpot = newHotSpot
+    onUpdate()
+  }
+
+  function updateTimes(addTimes) {
+    return () => {
+      if (addTimes && times[1] < 24) times = [times[0] + 1, times[1] + 1]
+      else if (!addTimes && times[0] > 0) times = [times[0] - 1, times[1] - 1]
+      onUpdate()
+    }
+  }
+
+  function updateTimeType() {
+    timeType = this.value
+    onUpdate()
+  }
+
+  function updateShowAllData() {
+    showAllData = this.checked
+    onUpdate()
+  }
+
+  function setToaster(e, data) {
+    select('.toaster')
+      .html(
+        `<ul>
+          <li>Afstand: ${data.distanceToHotSpot}KM</li>
+          <li>Capaciteit: ${data.capacity}</li>
+          <li>${
+            timeType === 'closing'
+              ? `Sluitingstijd: ${
+                  `${data.openingHours[1]}:00 uur` || 'Niet opgegeven'
+                }`
+              : `Openingstijd: ${
+                  `${data.openingHours[0]}:00 uur` || 'Niet opgegeven'
+                }`
+          }</li>
+          <li>${
+            timeType === 'closing'
+              ? `Openingstijd: ${
+                  `${data.openingHours[0]}:00 uur` || 'Niet opgegeven'
+                }`
+              : `Sluitingstijd: ${
+                  `${data.openingHours[1]}:00 uur` || 'Niet opgegeven'
+                }`
+          }</li>
+        </ul>`
+      )
+      .style('top', `${e.pageY - window.scrollY}px`)
+      .style('left', `${e.pageX - window.scrollX}px`)
+      .classed('toaster-shown', true)
+  }
+
+  function resetToaster() {
+    select('.toaster').classed('toaster-shown', false)
+  }
 }

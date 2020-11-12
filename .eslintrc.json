@@ -24,7 +24,8 @@
         "trailingComma": "es5"
       }
     ],
-    "no-undef": "error"
+    "no-undef": "error",
+    "prefer-const": "off"
   },
   "overrides": [{
     "files": ["src/modules/*.js", "src/helpers/*.js", "src/utilities/*.js"],
