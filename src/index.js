@@ -52,7 +52,7 @@ async function chartApp() {
   }
 
   function render(data, { times, distances, timeType }) {
-    createClockFace(times, clockRadius)
+    createClockFace(times, distances, clockRadius)
 
     const svg = selectSVG()
     const dataG = createOrSelectDataGroup()
@@ -91,39 +91,6 @@ async function chartApp() {
       .call(createHotSpotText(dimension, 'Laden...'))
 
     createForm()
-  }
-
-  function updateHotSpot() {
-    const newHotSpot = hotSpots.find(val => val.name === this.value)
-    hotSpot = newHotSpot
-    onUpdate()
-  }
-
-  function updateTimes(addTimes) {
-    return () => {
-      if (addTimes && times[1] < 24) times = [times[0] + 1, times[1] + 1]
-      else if (!addTimes && times[0] > 0) times = [times[0] - 1, times[1] - 1]
-      onUpdate()
-    }
-  }
-
-  function updateDistances(addDistances) {
-    return () => {
-      if (addDistances) distances = [distances[0] + 1, distances[1] + 1]
-      else if (distances[0] > 0)
-        distances = [distances[0] - 1, distances[1] - 1]
-      onUpdate()
-    }
-  }
-
-  function updateTimeType() {
-    timeType = this.value
-    onUpdate()
-  }
-
-  function updateShowAllData() {
-    showAllData = this.checked
-    onUpdate()
   }
 
   function createForm() {
@@ -186,5 +153,38 @@ async function chartApp() {
       .attr('type', 'checkbox')
       .attr('checked', () => showAllData)
       .on('change', updateShowAllData)
+  }
+
+  function updateHotSpot() {
+    const newHotSpot = hotSpots.find(val => val.name === this.value)
+    hotSpot = newHotSpot
+    onUpdate()
+  }
+
+  function updateTimes(addTimes) {
+    return () => {
+      if (addTimes && times[1] < 24) times = [times[0] + 1, times[1] + 1]
+      else if (!addTimes && times[0] > 0) times = [times[0] - 1, times[1] - 1]
+      onUpdate()
+    }
+  }
+
+  function updateDistances(addDistances) {
+    return () => {
+      if (addDistances) distances = [distances[0] + 1, distances[1] + 1]
+      else if (distances[0] > 0)
+        distances = [distances[0] - 1, distances[1] - 1]
+      onUpdate()
+    }
+  }
+
+  function updateTimeType() {
+    timeType = this.value
+    onUpdate()
+  }
+
+  function updateShowAllData() {
+    showAllData = this.checked
+    onUpdate()
   }
 }

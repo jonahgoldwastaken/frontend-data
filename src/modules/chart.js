@@ -136,16 +136,24 @@ function setToaster(e, data) {
       `<ul>
           <li>Afstand: ${data.distanceToHotSpot}KM</li>
           <li>Capaciteit: ${data.capacity}</li>
-          <li>
+          ${
+            data.openingHours[0]
+              ? `<li>
             Openingstijd: ${
               `${data.openingHours[0]}:00 uur` || 'Niet opgegeven'
             }
-          </li>
-          <li>
-            Sluitingstijd: ${
-              `${data.openingHours[1]}:00 uur` || 'Niet opgegeven'
-            }
-          </li>
+          </li>`
+              : ''
+          }
+          ${
+            data.openingHours[1]
+              ? `<li>
+              Sluitingstijd: ${
+                `${data.openingHours[1]}:00 uur` || 'Niet opgegeven'
+              }
+            </li>`
+              : ''
+          }
         </ul>`
     )
     .style('top', `${e.pageY - window.scrollY}px`)
