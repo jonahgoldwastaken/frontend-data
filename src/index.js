@@ -6,9 +6,11 @@ import {
   createInitialConfig,
   createRadialLine,
   createScales,
+  enterDots,
   readyDataForChart,
   resetToaster,
   setToaster,
+  updateDots,
 } from './modules/chart.js'
 import {
   createOrSelectDataGroup,
@@ -60,9 +62,8 @@ async function chartApp() {
     dataG
       .selectAll('circle')
       .data(data)
-      .join('circle')
+      .join(enterDots(line), updateDots(line))
       .classed('dot', true)
-      .attr('transform', d => `translate(${line([d]).slice(1).slice(0, -1)})`)
       .attr('r', 4)
       .classed(
         'dot-has-time',
@@ -128,19 +129,19 @@ async function chartApp() {
   function createForm() {
     const form = select('form')
 
-    form
-      .append('select')
-      .on('change', updateHotSpot)
+    const hotSpotSelect = form.append('select').on('input', updateHotSpot)
+
+    hotSpotSelect
       .selectAll('option')
       .data(hotSpots)
       .join('option')
       .attr('value', d => d.name)
       .text(d => d.name)
 
-    form
-      .append('select')
-      .attr('value', timeType)
-      .on('change', updateTimeType)
+    hotSpotSelect.attr('value', hotSpot)
+
+    const timeTypeSelect = form.append('select').on('change', updateTimeType)
+    timeTypeSelect
       .selectAll('option')
       .data([
         { value: 'opening', name: 'Openingstijden' },
@@ -149,6 +150,8 @@ async function chartApp() {
       .join('option')
       .text(d => d.name)
       .attr('value', d => d.value)
+
+    timeTypeSelect.attr('value', 'closing')
 
     form.append('label').classed('times-label', true)
 
