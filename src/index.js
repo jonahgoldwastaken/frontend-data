@@ -20,7 +20,7 @@ import {
   updateTimesLabel,
 } from './utilities/chart'
 
-chartApp()
+window.addEventListener('load', chartApp)
 
 async function chartApp() {
   let {
