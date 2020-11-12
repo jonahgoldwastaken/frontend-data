@@ -46,7 +46,9 @@ function createClockFace(times, distances, radius) {
     .attr('class', 'clock-time')
 
   faceTimeG
-    .append('line')
+    .selectAll('line')
+    .data(d => [d])
+    .join('line')
     .attr('x1', 100)
     .attr('x2', radius - lineMargin)
     .attr('class', 'clock-line')
