@@ -34,7 +34,7 @@ function parkingAreaMapper(data) {
     map(val =>
       pipe(
         renameKeys(parkingAreaLookupTable),
-        omit(['startdatearea', 'enddatearea', 'usageid']),
+        omit(['startdatearea', 'enddatearea', 'usageid', 'areamanagerid']),
         assoc('usage', associateUsageGoal(data[1], val)),
         assoc('capacity', associateSpecifications(data[2], val)),
         assoc('coordinates', associateCoordinates(data[3], val)),

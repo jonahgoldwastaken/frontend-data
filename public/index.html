@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,11 +8,43 @@
   <link rel="stylesheet" href="./_dist_/index.css">
   <link rel="modulepreload" href="./_dist_/helpers/RDWData.js">
 </head>
+
 <body>
-  <h1>Datavisualisatie</h1>
-  <form></form>
-  <svg xmlns="http://www.w3.org/2000/svg"></svg>
+  <h1>Wat zijn de openingstijden rondom hot-spots in Amsterdam?</h1>
+  <div class="flex">
+    <div>
+      <form></form>
+      <div class="legend">
+        <h2>Legenda</h2>
+        <ul>
+          <li><span class="legend-dot dot-black">Zwarte punt</span> Parkeergarage met openings- of sluitingstijd</li>
+          <li><span class="legend-dot dot-grey">Grijze punt</span> Parkeergarage zonder openings- of sluitingstijd
+          </li>
+        </ul>
+      </div>
+      <div>
+        <h2>Bronnen</h2>
+        <ul>
+          <li>
+            <a target="_blank" rel="noopener norefferer"
+              href="https://bl.ocks.org/vikkya/09014cc55d4475b60618e5df5432c808">Polar Plot (v4) van Vikky Ambarkar</a>
+          </li>
+          <li>
+            <a target="_blank" rel="noopener norefferer" href="https://observablehq.com/@d3/d3-lineradial">d3.lineRadial
+              van Fil</a>
+          </li>
+          <li>
+            <a target="_blank" rel="noopener norefferer"
+              href="https://stackoverflow.com/questions/33695073/javascript-polar-scatter-plot-using-d3-js">Dit
+              stackoverflow antwoord van ene Mark</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <svg xmlns="http://www.w3.org/2000/svg"></svg>
+  </div>
   <div class="toaster"></div>
   <script type="module" src="./_dist_/index.js"></script>
 </body>
+
 </html>

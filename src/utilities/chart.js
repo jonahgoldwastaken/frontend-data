@@ -56,8 +56,8 @@ function filterOnOpeningHours({ times, timeType }) {
   return area =>
     area.openingHours[0] !== null
       ? timeType === 'opening'
-        ? area.openingHours[0] > times[0] && area.openingHours[0] < times[1]
-        : area.openingHours[1] > times[0] && area.openingHours[1] < times[1]
+        ? area.openingHours[0] >= times[0] && area.openingHours[0] < times[1]
+        : area.openingHours[1] >= times[0] && area.openingHours[1] < times[1]
       : true
 }
 
@@ -159,9 +159,11 @@ function createOrSelectClockFaceGroup() {
  * Prints times on times label
  * @param {[number, number]} times Array with min and max time
  */
-function updateTimesLabel(times) {
+function updateTimesLabel(timeType, times) {
   return select('.times-label').text(
-    `: van ${times[0] < 10 ? `0${times[0]}` : times[0]} tot ${times[1]} uur`
+    `Tijdfilter: van ${times[0] < 10 ? `0${times[0]}` : times[0]}:00 tot ${
+      times[1]
+    }:00 uur`
   )
 }
 

@@ -33,7 +33,7 @@ yarn lint  # Runs ESLint on files to check for consistent code.
 
 ## Concept
 
-[Extended version](https://github.com/theonejonahgold/functional-programming/wiki/Concept-🦧)
+[Extended version](https://github.com/theonejonahgold/frontend-data/wiki/Concept-🦧)
 
 ### Main Question
 
@@ -41,16 +41,13 @@ What is the relation between distance and availability of parking places to hot-
 
 ### Research questions
 
-- Where are the parking places situated?
-- How many parking garages are open 24 hours a day?
-- What is the average closing time for parking garages?
-- Do parking garages change their prices during the night, and how?
-- With how many parking garages can you exit with your vehicle throughout the entire day?
-- What is the capacity of the parking places?
+- How close are parking areas to the hot-spot?
+- What are the average hours of the parking areas?
+- What are the capacities of the parking areas?
 
 ### Used variables
 
-The used variables are available through [this link](https://github.com/theonejonahgold/functional-programming/wiki/Concept-🦧#gebruikte-variabelen).
+The used variables are available through [this link](https://github.com/theonejonahgold/frontend-data/wiki/Concept-🦧#gebruikte-variabelen).
 
 ## Project structure
 
@@ -70,8 +67,18 @@ The used variables are available through [this link](https://github.com/theonejo
 
 ## D3 functionalities used
 
-**Work in progress**
+- [lineRadial](https://github.com/d3/d3-shape/blob/master/README.md#_lineradial)
+- [scaleLinear](https://github.com/d3/d3-scale/blob/master/README.md#scalelinear)
+- [select/selectAll](https://github.com/d3/d3-selection/blob/master/README.md#select)
+- [range](https://github.com/d3/d3-array/blob/master/README.md#range)
 
+## Functional programming principles applied
+
+- [Composition](https://github.com/cmda-tt/course-20-21/blob/master/examples/functional-patterns/composition.md)
+- [Functional purity](https://github.com/cmda-tt/course-20-21/blob/master/examples/functional-patterns/impure.md)
+- [Data immutability](https://github.com/cmda-tt/course-20-21/blob/master/examples/functional-patterns/immutability.md)
+- [Currying](https://en.wikipedia.org/wiki/Currying)
+- [Higher order functions](https://github.com/cmda-tt/course-20-21/blob/master/examples/functional-patterns/ho-functions.md)
 
 ## Tools used
 
