@@ -1,18 +1,13 @@
-# Functional Programming
+# Frontend Data
 
-[Wiki](https://github.com/theonejonahgold/functional-programming/wiki) • [Concept](#concept) • [Practicing with survey data](https://github.com/theonejonahgold/functional-programming/wiki/Oefenen-met-survey-data-🙈) • [Processing RDW Data](https://github.com/theonejonahgold/functional-programming/wiki/RDW-Data-verwerken-🦍)
+[Wiki](https://github.com/theonejonahgold/frontend-data/wiki) • [Concept](#concept) • [Data visualisation](https://frontend-data.jonahmeijers.nl)
 
-This repo is created to process data provided by de Volkskrant, so that a data visualisation can be created using D3. The data consists of parking data gathered by the RDW (Dutch Vehicle Authority), and contains many different variables that can be put together, combined, made relationships with. This should create an interesting data-visualisation, which de Volkskrant can use to write an article. Read more about this in my [Debriefing](https://github.com/theonejonahgold/functional-programming/wiki/Debriefing-🐒).
+This repo is created to use the data processed in the [functional-programming repo](https://github.com/theonejonahgold/functional-programming), to create a data visualisation using D3. The data consists of parking data gathered by the RDW (Dutch Vehicle Authority), which can bring many great insights when put into a data visualisation. Read more about the assingment in my [Debriefing](https://github.com/theonejonahgold/functional-programming/wiki/Debriefing-🐒), and read about the concept [further below](#concept)
 
 ## Learning goals
 
-- Understanding and applying Functional Programming principles:
-  - Pure and Impure functions
-  - Higher-order functions
-  - Composition
-  - Currying
-  - Immutability
-- Data processing techniques
+- Understanding how D3 works
+- Using D3 to create a data visualisation with data I myself have processed.
 
 ## Getting started
 
@@ -21,17 +16,16 @@ This repo is created to process data provided by de Volkskrant, so that a data v
 To get started, you first need to clone the repo and install the dependencies:
 
 ```bash
-git clone https://github.com/theonejonahgold/functional-programming
-cd functional-programming
+git clone https://github.com/theonejonahgold/frontend-data
+cd frontend-data
 yarn install || yarn
 ```
 
 ### Available commands
 
 ```bash
-yarn watch # Watches the src & dist folder on file changes
-yarn build # Builds the TypeScript code in the src folder
-yarn start # Starts Node in the dist folder
+yarn dev   # Opens a dev server and watches src files.
+yarn build # Builds a bundle for the website.
 yarn lint  # Runs ESLint on files to check for consistent code.
 ```
 
@@ -60,31 +54,27 @@ The used variables are available through [this link](https://github.com/theonejo
 
 ```bash
 .
-├── src    # Contains TS source code.
-│   ├── data      # Here, all the data files are put. For privacy reasons, this folder only contains a .gitkeep file on the public repository. You need to supply your own data.
-│   ├── utilities # Utilities are general functions that can be adapted to certain use cases. They are divided into files named after the type they manipulate.
-│   ├── helpers   # This folder is for functions used for specific use cases like language parsing.
-│   ├── modules   # The modules folder is a place where all functions compositions are written.
-│   ├── types     # TypeScript types, interfaces and modules live here. The compiler automatically puts these into the environment, so no extra type imports are needed.
-│   └── index.ts  # Where it all comes together. This file is run when compiled to JS code.
-├── dist   # Contains identical folder structure as src folder, with compiled JS code and source maps instead of TS code.
+├── src    # Contains JS and CSS source code.
+│   ├── utilities   # Utilities are general functions that can be adapted to certain use cases. They are divided into files named after the type they manipulate.
+│   ├── helpers     # This folder is for functions used for specific use cases like language parsing.
+│   ├── modules     # The modules folder is a place where all functions compositions are written.
+│   ├── index.js    # Where it all comes together. This file is run when compiled to JS code.
+│   └── index.css   # The main CSS file, where all the styling is created using TailwindCSS.
+├── public
+│   └── index.html  # The html file that gets loaded when you run a dev server or run start a production build.
+├── build  # Contains identical folder structure as src folder, with compiled JS code, node modules compiled to web modules.
 └── config # Contains the Nodemon configurations used for development of this project.
 ```
 
-## Functional Programming Principles Applied
+## D3 functionalities used
 
-- [Composition](https://github.com/cmda-tt/course-20-21/blob/master/examples/functional-patterns/composition.md): The combining of functions to create extra functionality.
-- [Functional purity](https://github.com/cmda-tt/course-20-21/blob/master/examples/functional-patterns/impure.md): All functions give the same output when the same input is used.
-- [Data immutability](https://github.com/cmda-tt/course-20-21/blob/master/examples/functional-patterns/immutability.md): All data passed into the functions is copied and then mutated, so that the original data itself is never mutated.
-- [Currying](https://en.wikipedia.org/wiki/Currying): All functions return a function that can be used in a Higher-order function.
-- [Higher order functions](https://github.com/cmda-tt/course-20-21/blob/master/examples/functional-patterns/ho-functions.md): All functions created can be passed into these to manipulate the data passed.
+**Work in progress**
+
 
 ## Tools used
 
 - [NodeJS](https://nodejs.org/en/)
+- [Snowpack](https://snowpack.dev)
 - [Yarn Classic](https://classic.yarnpkg.com/lang/en/)
-- [TypeScript](https://www.typescriptlang.org)
-- [Nodemon](https://nodemon.io)
 - [ramda](https://github.com/ramda/ramda)
-- [dotenv](https://github.com/motdotla/dotenv)
-- [ESLint](https://eslint.org) with the [ESLint Functional Plugin](https://github.com/jonaskello/eslint-plugin-functional/) and [Prettier](https://github.com/prettier/eslint-plugin-prettier) configurations (config from the ESLint Functional page with own adjustments)
+- [ESLint](https://eslint.org)
