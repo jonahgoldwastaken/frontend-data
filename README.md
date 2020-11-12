@@ -75,8 +75,10 @@ The used variables are available through [this link](https://github.com/theonejo
 
 ## Tools used
 
+- [D3](https://d3js.org)
 - [NodeJS](https://nodejs.org/en/)
 - [Snowpack](https://snowpack.dev)
+- [PostCSS](https://postcss.org)
 - [Yarn Classic](https://classic.yarnpkg.com/lang/en/)
 - [ramda](https://github.com/ramda/ramda)
 - [ESLint](https://eslint.org)
