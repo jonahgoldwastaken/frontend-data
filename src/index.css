@@ -8,6 +8,10 @@ h1, h2 {
   line-height: 1.125;
 }
 
+a {
+  display: block;
+}
+
 .flex {
   display: flex;
 }
