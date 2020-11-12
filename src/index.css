@@ -1,3 +1,7 @@
+* {
+  box-sizing: border-box;
+}
+
 h1 {
   font-family: sans-serif;
 }
@@ -24,12 +28,17 @@ h1 {
 }
 
 .hot-spot {
+  width: 100%;
   position: relative;
   top: 50%;
   transform: translateY(-50%);
   font: 700 24px sans-serif;
   color: white;
   text-align: center;
+  /* https://css-tricks.com/almanac/properties/o/overflow-wrap/ */
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  hyphens: auto;
 }
 
 .dot {
@@ -39,5 +48,27 @@ h1 {
   
   &-has-no-time {
     fill: darkgrey;
+  }
+}
+
+.toaster {
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: black;
+  font-weight: bold;
+  font-family: sans-serif;
+  padding: 0.5em;
+  color: white;
+  
+  &:not(&-shown) {
+    display: none;
+  }
+
+  ul {
+    padding: 1em;
+    margin: 0;
+    list-style-type: none;
+    line-height: 1.5;
   }
 }

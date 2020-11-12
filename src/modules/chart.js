@@ -1,11 +1,12 @@
 import { lineRadial } from 'd3'
-import { pipe, filter } from 'ramda'
+import { always, filter, pipe, unless } from 'ramda'
 import {
   addDistanceToData,
+  createDistanceScale,
+  createTimeScale,
+  filterInvalidData,
   filterOnDistanceToHotSpot,
   filterOnOpeningHours,
-  createTimeScale,
-  createDistanceScale,
 } from '../utilities/chart.js'
 
 export {
@@ -21,14 +22,16 @@ export {
  * @param {number} dimension Dimension of square SVG.
  * @returns {object} Object with default values
  */
-function createInitialConfig(dimension) {
+function createInitialConfig(dimension, hotSpot) {
   return {
-    dimension: dimension,
+    dimension,
     clockRadius: dimension / 2 - 30,
     radius: dimension / 2 - 91.2,
-    defaultTimes: [12, 24],
-    defaultDistances: [0, 5],
-    defaultTimeType: 'closing',
+    times: [12, 24],
+    distances: [0, 5],
+    timeType: 'closing',
+    showAllData: true,
+    hotSpot,
   }
 }
 
@@ -39,14 +42,17 @@ function createInitialConfig(dimension) {
  * @param {number[]} distances Array with min and max distance.
  * @param {number[]} times Array with min and max times.
  * @param {string} timeType 'opening' or 'closing' time type string.
+ * @param {boolean} showAllData Boolean stating if all data should be shown
  * @returns {(object) => object[]} Function that takes a module and returns parsed dataset.
  */
-function readyDataForChart(hotspot, distances, times, timeType) {
-  return ({ default: dataset }) =>
+function readyDataForChart(hotspot, distances, times, timeType, showAllData) {
+  console.log(showAllData)
+  return dataset =>
     pipe(
       addDistanceToData(hotspot),
       filter(filterOnDistanceToHotSpot(distances)),
-      filter(filterOnOpeningHours({ times, timeType }))
+      filter(filterOnOpeningHours({ times, timeType })),
+      unless(() => showAllData, filter(filterInvalidData))
     )(dataset)
 }
 
@@ -65,6 +71,13 @@ function createRadialLine({ timeScale, distanceScale }, timeType) {
     )
 }
 
+/**
+ * Creates and returns both the distance and time scale
+ *
+ * @param {[number, number]} times Array with min and max time
+ * @param {[number, number]} distances Array with min and max distance
+ * @param {number} range Radius of chart for range in distance scale
+ */
 function createScales(times, distances, range) {
   return [createTimeScale(times), createDistanceScale(distances, range)]
 }

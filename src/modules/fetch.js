@@ -1,4 +1,4 @@
-import { andThen, map, pipe, otherwise } from 'ramda'
+import { andThen, map, otherwise, pipe } from 'ramda'
 import { fetchData, parseResToJson } from '../utilities/fetch.js'
 
 export { fetchAndParseJson, fetchAndParseMultipleJson }

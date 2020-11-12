@@ -1,21 +1,21 @@
 import {
-  pipe,
-  map,
-  ifElse,
-  tail,
-  zipObj,
-  reduce,
+  add,
   equals,
   gt,
+  ifElse,
   length,
-  add,
+  map,
+  pipe,
+  reduce,
+  tail,
+  zipObj,
 } from 'ramda'
 import { divideNum } from 'ramda-adjunct'
-import {
-  splitStringOnString,
-  removeRegExFromString,
-} from '../utilities/strings.js'
 import { isGeoDataPoint } from '../utilities/geoData.js'
+import {
+  removeRegExFromString,
+  splitStringOnString,
+} from '../utilities/strings.js'
 
 export { parseGeoData }
 
