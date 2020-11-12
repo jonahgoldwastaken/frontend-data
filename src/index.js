@@ -107,7 +107,8 @@ async function chartApp() {
   function updateDistances(addDistances) {
     return () => {
       if (addDistances) distances = [distances[0] + 1, distances[1] + 1]
-      else distances = [distances[0] - 1, distances[1] - 1]
+      else if (distances[0] > 0)
+        distances = [distances[0] - 1, distances[1] - 1]
       onUpdate()
     }
   }
