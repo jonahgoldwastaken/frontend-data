@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,11 +8,25 @@
   <link rel="stylesheet" href="./_dist_/index.css">
   <link rel="modulepreload" href="./_dist_/helpers/RDWData.js">
 </head>
+
 <body>
   <h1>Wat zijn de openingstijden rondom hot-spots in Amsterdam?</h1>
-  <form></form>
-  <svg xmlns="http://www.w3.org/2000/svg"></svg>
+  <div class="flex">
+    <div>
+      <form></form>
+      <div class="legend">
+        <h2>Legenda</h2>
+        <ul>
+          <li><span class="legend-dot dot-black">Zwarte punt</span> Parkeergarage met openings- of sluitingstijd</li>
+          <li><span class="legend-dot dot-grey">Grijze punt</span> Parkeergarage zonder openings- of sluitingstijd
+          </li>
+        </ul>
+      </div>
+    </div>
+    <svg xmlns="http://www.w3.org/2000/svg"></svg>
+  </div>
   <div class="toaster"></div>
   <script type="module" src="./_dist_/index.js"></script>
 </body>
+
 </html>

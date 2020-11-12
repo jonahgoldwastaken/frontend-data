@@ -81,7 +81,7 @@ async function chartApp() {
       .on('mouseout', resetToaster)
 
     updateHotSpotText(svg, hotSpot.name)
-    updateTimesLabel(times)
+    updateTimesLabel(timeType, times)
     updateDistancesLabel(distances)
   }
 
@@ -96,7 +96,13 @@ async function chartApp() {
   function createForm() {
     const form = select('form')
 
-    const hotSpotSelect = form.append('select').on('input', updateHotSpot)
+    form.append('h2').text('Filters')
+
+    const hotSpotSelect = form
+      .append('label')
+      .text('Hotspot: ')
+      .append('select')
+      .on('input', updateHotSpot)
 
     hotSpotSelect
       .selectAll('option')
@@ -107,8 +113,11 @@ async function chartApp() {
 
     hotSpotSelect.attr('value', hotSpot)
 
-    const timeTypeSelect = form.append('select').on('change', updateTimeType)
-    timeTypeSelect
+    const timeTypeLabel = form.append('label').text('Tijdsoort: ')
+
+    timeTypeLabel
+      .append('select')
+      .on('change', updateTimeType)
       .selectAll('option')
       .data([
         { value: 'opening', name: 'Openingstijden' },
@@ -118,29 +127,32 @@ async function chartApp() {
       .text(d => d.name)
       .attr('value', d => d.value)
 
-    timeTypeSelect.attr('value', 'closing')
+    const timesButtonLabel = form.append('label')
 
-    form.append('label').classed('times-label', true)
+    timesButtonLabel.append('span').classed('times-label', true)
 
-    form
+    timesButtonLabel
       .append('button')
       .text('-')
       .attr('type', 'button')
       .on('click', updateTimes(false))
-    form
+    timesButtonLabel
       .append('button')
       .text('+')
       .attr('type', 'button')
       .on('click', updateTimes(true))
 
-    form.append('label').classed('distances-label', true)
+    const distancesButtonLabel = form.append('label')
 
-    form
+    distancesButtonLabel.append('span').classed('distances-label', true)
+
+    distancesButtonLabel
       .append('button')
       .text('-')
       .attr('type', 'button')
       .on('click', updateDistances(false))
-    form
+
+    distancesButtonLabel
       .append('button')
       .text('+')
       .attr('type', 'button')
