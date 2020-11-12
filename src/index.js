@@ -6,9 +6,11 @@ import {
   createInitialConfig,
   createRadialLine,
   createScales,
+  enterDots,
   readyDataForChart,
   resetToaster,
   setToaster,
+  updateDots,
 } from './modules/chart.js'
 import {
   createOrSelectDataGroup,
@@ -18,7 +20,7 @@ import {
   updateTimesLabel,
 } from './utilities/chart'
 
-chartApp()
+window.addEventListener('load', chartApp)
 
 async function chartApp() {
   let {
@@ -50,7 +52,7 @@ async function chartApp() {
   }
 
   function render(data, { times, distances, timeType }) {
-    createClockFace(times, clockRadius)
+    createClockFace(times, distances, clockRadius)
 
     const svg = selectSVG()
     const dataG = createOrSelectDataGroup()
@@ -60,9 +62,8 @@ async function chartApp() {
     dataG
       .selectAll('circle')
       .data(data)
-      .join('circle')
+      .join(enterDots(line), updateDots(line))
       .classed('dot', true)
-      .attr('transform', d => `translate(${line([d]).slice(1).slice(0, -1)})`)
       .attr('r', 4)
       .classed(
         'dot-has-time',
@@ -92,55 +93,22 @@ async function chartApp() {
     createForm()
   }
 
-  function updateHotSpot() {
-    const newHotSpot = hotSpots.find(val => val.name === this.value)
-    hotSpot = newHotSpot
-    onUpdate()
-  }
-
-  function updateTimes(addTimes) {
-    return () => {
-      if (addTimes && times[1] < 24) times = [times[0] + 1, times[1] + 1]
-      else if (!addTimes && times[0] > 0) times = [times[0] - 1, times[1] - 1]
-      onUpdate()
-    }
-  }
-
-  function updateDistances(addDistances) {
-    return () => {
-      if (addDistances) distances = [distances[0] + 1, distances[1] + 1]
-      else if (distances[0] > 0)
-        distances = [distances[0] - 1, distances[1] - 1]
-      onUpdate()
-    }
-  }
-
-  function updateTimeType() {
-    timeType = this.value
-    onUpdate()
-  }
-
-  function updateShowAllData() {
-    showAllData = this.checked
-    onUpdate()
-  }
-
   function createForm() {
     const form = select('form')
 
-    form
-      .append('select')
-      .on('change', updateHotSpot)
+    const hotSpotSelect = form.append('select').on('input', updateHotSpot)
+
+    hotSpotSelect
       .selectAll('option')
       .data(hotSpots)
       .join('option')
       .attr('value', d => d.name)
       .text(d => d.name)
 
-    form
-      .append('select')
-      .attr('value', timeType)
-      .on('change', updateTimeType)
+    hotSpotSelect.attr('value', hotSpot)
+
+    const timeTypeSelect = form.append('select').on('change', updateTimeType)
+    timeTypeSelect
       .selectAll('option')
       .data([
         { value: 'opening', name: 'Openingstijden' },
@@ -149,6 +117,8 @@ async function chartApp() {
       .join('option')
       .text(d => d.name)
       .attr('value', d => d.value)
+
+    timeTypeSelect.attr('value', 'closing')
 
     form.append('label').classed('times-label', true)
 
@@ -183,5 +153,38 @@ async function chartApp() {
       .attr('type', 'checkbox')
       .attr('checked', () => showAllData)
       .on('change', updateShowAllData)
+  }
+
+  function updateHotSpot() {
+    const newHotSpot = hotSpots.find(val => val.name === this.value)
+    hotSpot = newHotSpot
+    onUpdate()
+  }
+
+  function updateTimes(addTimes) {
+    return () => {
+      if (addTimes && times[1] < 24) times = [times[0] + 1, times[1] + 1]
+      else if (!addTimes && times[0] > 0) times = [times[0] - 1, times[1] - 1]
+      onUpdate()
+    }
+  }
+
+  function updateDistances(addDistances) {
+    return () => {
+      if (addDistances) distances = [distances[0] + 1, distances[1] + 1]
+      else if (distances[0] > 0)
+        distances = [distances[0] - 1, distances[1] - 1]
+      onUpdate()
+    }
+  }
+
+  function updateTimeType() {
+    timeType = this.value
+    onUpdate()
+  }
+
+  function updateShowAllData() {
+    showAllData = this.checked
+    onUpdate()
   }
 }

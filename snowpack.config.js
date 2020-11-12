@@ -12,7 +12,15 @@ module.exports = {
       },
     ],
     ['@snowpack/plugin-postcss', {}],
-    ['@snowpack/plugin-optimize', {}],
+    [
+      '@snowpack/plugin-webpack',
+      {
+        outputPattern: {
+          js: '[name].[hash].js',
+          css: '[name].[hash].css',
+        },
+      },
+    ],
   ],
   install: [
     /* ... */

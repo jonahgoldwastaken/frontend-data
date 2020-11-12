@@ -26,6 +26,7 @@
     "@snowpack/plugin-optimize": "^0.2.7",
     "@snowpack/plugin-postcss": "^1.0.7",
     "@snowpack/plugin-run-script": "^2.2.0",
+    "@snowpack/plugin-webpack": "^2.1.1",
     "@types/ramda": "^0.27.32",
     "autoprefixer": "^10.0.1",
     "eslint": "^7.12.1",

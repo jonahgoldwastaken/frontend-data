@@ -16,6 +16,8 @@ export {
   createRadialLine,
   setToaster,
   resetToaster,
+  enterDots,
+  updateDots,
 }
 
 /**
@@ -29,9 +31,9 @@ function createInitialConfig(dimension, hotSpot) {
     dimension,
     clockRadius: dimension / 2 - 30,
     radius: dimension / 2 - 91.2,
-    times: [12, 24],
+    times: [0, 12],
     distances: [0, 5],
-    timeType: 'closing',
+    timeType: 'opening',
     showAllData: true,
     hotSpot,
   }
@@ -84,6 +86,45 @@ function createScales(times, distances, range) {
 }
 
 /**
+ * Enter function for D3 selection.join
+ *
+ * @param {number} dimension Dimension of graph
+ * @param {*} line D3 Line Radial
+ * @returns {(*) => *} Function that can be used inside .join
+ */
+function enterDots(line) {
+  return selection =>
+    selection
+      .append('circle')
+      .attr('transform', `translate(0px, 0px)`)
+      .call(enter =>
+        enter
+          .transition()
+          .duration(100)
+          .attr(
+            'transform',
+            d => `translate(${line([d]).slice(1).slice(0, -1)})`
+          )
+      )
+}
+
+/**
+ * Update function for D3 selection.join
+ *
+ * @param {*} line D3 Line Radial
+ * @returns {(*) => *} Function that can be used inside .join
+ */
+function updateDots(line) {
+  return selection =>
+    selection.call(update =>
+      update
+        .transition()
+        .duration(100)
+        .attr('transform', d => `translate(${line([d]).slice(1).slice(0, -1)})`)
+    )
+}
+
+/**
  * Sets up the toaster with data of currently hovered object
  *
  * @param {MouseEvent} e Mouse events
@@ -95,16 +136,24 @@ function setToaster(e, data) {
       `<ul>
           <li>Afstand: ${data.distanceToHotSpot}KM</li>
           <li>Capaciteit: ${data.capacity}</li>
-          <li>
+          ${
+            data.openingHours[0]
+              ? `<li>
             Openingstijd: ${
               `${data.openingHours[0]}:00 uur` || 'Niet opgegeven'
             }
-          </li>
-          <li>
-            Sluitingstijd: ${
-              `${data.openingHours[1]}:00 uur` || 'Niet opgegeven'
-            }
-          </li>
+          </li>`
+              : ''
+          }
+          ${
+            data.openingHours[1]
+              ? `<li>
+              Sluitingstijd: ${
+                `${data.openingHours[1]}:00 uur` || 'Niet opgegeven'
+              }
+            </li>`
+              : ''
+          }
         </ul>`
     )
     .style('top', `${e.pageY - window.scrollY}px`)

@@ -11,14 +11,24 @@ h1 {
   stroke: black;
   stroke-width: 12px;
   
-  &-hour {
+  &-time {
    font: 700 24px sans-serif;
   }
+
+  &-distance {
+    font: 500 12px sans-serif;
+  }
   
-  &-hour-line {
+  &-line {
+    fill: none;
     stroke-width: 4px;
     stroke: lightgrey;
     stroke-dasharray: 5;
+
+    &-small {
+      stroke-dasharray: 10;
+      stroke-width: 2px;
+    }
   }
   
   &-center {
