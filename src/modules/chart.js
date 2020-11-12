@@ -1,5 +1,5 @@
-import { lineRadial } from 'd3'
-import { always, filter, pipe, unless } from 'ramda'
+import { lineRadial, select } from 'd3'
+import { filter, pipe, unless } from 'ramda'
 import {
   addDistanceToData,
   createDistanceScale,
@@ -14,6 +14,8 @@ export {
   createScales,
   readyDataForChart,
   createRadialLine,
+  setToaster,
+  resetToaster,
 }
 
 /**
@@ -46,7 +48,6 @@ function createInitialConfig(dimension, hotSpot) {
  * @returns {(object) => object[]} Function that takes a module and returns parsed dataset.
  */
 function readyDataForChart(hotspot, distances, times, timeType, showAllData) {
-  console.log(showAllData)
   return dataset =>
     pipe(
       addDistanceToData(hotspot),
@@ -80,4 +81,40 @@ function createRadialLine({ timeScale, distanceScale }, timeType) {
  */
 function createScales(times, distances, range) {
   return [createTimeScale(times), createDistanceScale(distances, range)]
+}
+
+/**
+ * Sets up the toaster with data of currently hovered object
+ *
+ * @param {MouseEvent} e Mouse events
+ * @param {object} data Data object passed by D3
+ */
+function setToaster(e, data) {
+  return select('.toaster')
+    .html(
+      `<ul>
+          <li>Afstand: ${data.distanceToHotSpot}KM</li>
+          <li>Capaciteit: ${data.capacity}</li>
+          <li>
+            Openingstijd: ${
+              `${data.openingHours[0]}:00 uur` || 'Niet opgegeven'
+            }
+          </li>
+          <li>
+            Sluitingstijd: ${
+              `${data.openingHours[1]}:00 uur` || 'Niet opgegeven'
+            }
+          </li>
+        </ul>`
+    )
+    .style('top', `${e.pageY - window.scrollY}px`)
+    .style('left', `${e.pageX - window.scrollX}px`)
+    .classed('toaster-shown', true)
+}
+
+/**
+ * Removes the toaster from view
+ */
+function resetToaster() {
+  return select('.toaster').classed('toaster-shown', false)
 }
